@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -12,8 +13,10 @@ import androidx.appcompat.app.AlertDialog
 class MainActivity : AppCompatActivity() {
 
     var cuenta: Int = 0
+    var cosa: String? = "pichadas"
     lateinit var btn_sumar: Button
     lateinit var tv_count: TextView
+    lateinit var et_pichadas: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         tv_count = findViewById(R.id.tv_count)
         val btn_restar: Button = findViewById(R.id.btn_restar)
         val btn_borrar: Button = findViewById(R.id.btn_borrar)
+        et_pichadas = findViewById(R.id.et_pichadas)
 
         btn_sumar.setOnClickListener{
             cuenta++
@@ -62,29 +66,16 @@ class MainActivity : AppCompatActivity() {
         }
         alertDialog?.show()
     }
-    /*
-    override fun onStart() {
-        super.onStart()
-        val preferencias = this.getPreferences(Context.MODE_PRIVATE)
-        cuenta = preferencias.getInt("key_cuenta", 0)
-        tv_count.setText("$cuenta")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val preferencias = this.getPreferences(Context.MODE_PRIVATE)
-        val editor = preferencias.edit()
-        editor.putInt("key_cuenta", cuenta)
-        editor.apply()
-    }
-
-*/
 
     override fun onPause() {
         super.onPause()
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
+
+        cosa = et_pichadas.text.toString()
+
         editor.putInt("contador", cuenta)
+        editor.putString("cosa", cosa)
         editor.commit()
     }
 
@@ -92,6 +83,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE)
         cuenta = sharedPref.getInt("contador", 0)
+        cosa = sharedPref.getString("cosa", "pichadas")
+
+        et_pichadas.setText("$cosa")
         tv_count.setText("$cuenta")
     }
 
